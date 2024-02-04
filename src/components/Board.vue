@@ -9,7 +9,8 @@ const boardStore = useBoards();
     <div class="grid grid-flow-col gap-4">
       <Column
         v-for="column in boardStore.selectedBoard?.columns"
-        :column="column"
+        :model-value="column"
+        @update:model-value="(value) => boardStore.editColumn(value)"
       />
     </div>
   </div>

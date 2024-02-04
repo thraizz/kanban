@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { useBoards } from "@/composables/useBoards";
 import { ColumnWithId } from "@/types";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import draggableComponent from "vuedraggable";
-defineProps<{
-  column: ColumnWithId;
-}>();
+const column = defineModel<ColumnWithId>({ required: true });
 
 const drag = ref(false);
 
-const { editName, addCard, editColor } = useBoards();
+const { addCard, editColor } = useBoards();
 const newCardContent = ref("");
 const showAddPopup = ref(false);
 </script>
@@ -24,7 +22,8 @@ const showAddPopup = ref(false);
       }"
     >
       <draggableComponent
-        group="people"
+        @change="$emit('update:modelValue', column)"
+        group="column"
         :list="column.items"
         @start="drag = true"
         @end="drag = false"

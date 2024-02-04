@@ -1,7 +1,13 @@
 import { db } from "@/firebase";
 import { Board, ColumnWithId } from "@/types";
 import { useUser } from "@/user";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 
@@ -11,6 +17,9 @@ export const useBoards = defineStore("boards", () => {
 
   const selectedBoardId = ref("");
   const uuid = computed(() => userStore.user?.uid);
+  const selectedBoard = computed<Board | undefined>(() => {
+    return boards.value?.[selectedBoardId.value];
+  });
 
   watch(
     () => userStore.isLoggedIn,
@@ -103,13 +112,28 @@ export const useBoards = defineStore("boards", () => {
     fetchBoards();
   };
 
-  const selectedBoard = computed<Board | undefined>(() => {
-    return boards.value?.[selectedBoardId.value];
-  });
+  const editColumn = async (column: ColumnWithId) => {
+    if (uuid.value === undefined || selectedBoardId.value === undefined) return;
+
+    const boardRef = doc(
+      db,
+      "userdata",
+      uuid.value,
+      "boards",
+      selectedBoardId.value,
+      "columns",
+      column.id,
+    );
+    console.log(column);
+    await setDoc(boardRef, column);
+    fetchBoards();
+  };
+
   return {
     editName,
     addCard,
     editColor,
+    editColumn,
     boards,
     fetchBoards,
     selectedBoard,
