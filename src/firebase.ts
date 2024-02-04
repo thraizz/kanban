@@ -11,7 +11,7 @@ const firebaseConfig = {
   projectId: "kanban-9e4e9",
   storageBucket: "kanban-9e4e9.appspot.com",
   messagingSenderId: "1028735043822",
-  appId: "1:1028735043822:web:3b7d78f93d7d0da5708bff"
+  appId: "1:1028735043822:web:3b7d78f93d7d0da5708bff",
 };
 
 // Initialize Firebase

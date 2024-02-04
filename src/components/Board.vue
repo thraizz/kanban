@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import { DocumentData } from "firebase/firestore";
-import { Ref, inject, ref } from "vue";
+import { useBoards } from "@/composables/useBoards";
 import Column from "./Column.vue";
 
-const selectedBoard = inject<Ref<string>>("selectedBoard") || ref("");
-defineProps<{
-  boards: Record<string, DocumentData>;
-}>();
+const boardStore = useBoards();
 </script>
 <template>
-  <div v-if="selectedBoard !== ''">
+  <div v-if="boardStore.selectedBoardId !== ''">
     <div class="grid grid-flow-col gap-4">
       <Column
-        v-for="(column, name) in $props.boards[selectedBoard]"
+        v-for="column in boardStore.selectedBoard?.columns"
         :column="column"
-        :name="name"
       />
     </div>
   </div>
